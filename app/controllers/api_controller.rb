@@ -1,22 +1,28 @@
 class ApiController < ApplicationController
   respond_to :json
-  
+
+  def lines
+    respond_with Line.all
+  end
+
   def line
-    @data = {
-    }
-    respond_with @data 
-
+    respond_with Line.find(params[:id])
   end
+
+  def stops
+    respond_with Line.find(params[:id]).stops
+  end
+
   def stop
-    @data = {
-    }
-    respond_with @data 
-
+    respond_with Line.find(params[:id]).stops.find(params[:stop])
   end
-  def bus
-    @data = {
-    }
-    respond_with @data 
 
-  end  
+  def buses
+    respond_with Line.find(params[:id]).buses
+  end
+
+  def bus
+    respond_with Line.find(params[:id]).buses.find(params[:bus])
+  end
+
 end
