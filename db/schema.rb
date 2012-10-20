@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121020192007) do
+ActiveRecord::Schema.define(:version => 20121020213341) do
 
   create_table "buses", :force => true do |t|
     t.string   "lat"
@@ -34,8 +34,12 @@ ActiveRecord::Schema.define(:version => 20121020192007) do
     t.string   "long"
     t.integer  "riders"
     t.integer  "line_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.string   "tag"
+    t.string   "title"
+    t.string   "short_title"
+    t.integer  "stop_id"
   end
 
 end
