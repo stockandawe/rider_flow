@@ -1,28 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>RiderFlow</title>
+
+  <title>riderStream</title>
+  <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAbVU6r4eUcGLrvbCYRl6a9lueOY_txegc&sensor=true" type="text/javascript"></script>
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.20/jquery-ui.min.js" type="text/javascript"></script>
 </head>
 <body>
-    <header class="navbar navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
-          <%= link_to "Rider Flow", '#', id: "logo" %>   
-          <nav>
-            <ul class="nav pull-right">
-              <li><%= link_to "Home",    '#' %></li>
-              <li><%= link_to "Help",    '#' %></li>
-            </ul>
-          </nav>
-        </div>
-      </div>
-    </header>
-    <div class="container">
-      <%= yield %>
-    </div>
-  </body>
+  <%= yield %>
+</body>
 
 </html>
