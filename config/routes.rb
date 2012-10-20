@@ -9,4 +9,6 @@ RiderFlow::Application.routes.draw do
     match 'lines/:id/stops' => 'api#stops'
     match 'lines/:id/stops/:stop' => 'api#stops'
   end
+  
+  match 'cron' => 'cron#riders'  
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121020213341) do
+ActiveRecord::Schema.define(:version => 20121020223130) do
 
   create_table "buses", :force => true do |t|
     t.string   "lat"
@@ -20,6 +20,8 @@ ActiveRecord::Schema.define(:version => 20121020213341) do
     t.integer  "line_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "bus_id"
+    t.string   "dir_tag"
   end
 
   create_table "lines", :force => true do |t|
