@@ -5,3 +5,15 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+require 'nokogiri'
+require 'open-uri'
+
+# I am hosting interesting.html on a local server.  This is the URL.
+url = "http://webservices.nextbus.com/service/publicXMLFeed?command=routeList&a=sf-muni"
+
+# Here we load the URL into Nokogiri for parsing downloading the page in
+# the process
+data = Nokogiri::XML(open(url))
+
+puts data

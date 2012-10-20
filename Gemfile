@@ -4,6 +4,7 @@ gem 'pg'
 gem 'rails', '3.2.8'
 gem 'jquery-rails'
 gem 'bootstrap-sass', '~> 2.1.0.1'
+gem 'nokogiri'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
