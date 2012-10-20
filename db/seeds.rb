@@ -16,4 +16,8 @@ url = "http://webservices.nextbus.com/service/publicXMLFeed?command=routeList&a=
 # the process
 data = Nokogiri::XML(open(url))
 
+root = data.root
 puts data
+routes = root.xpath("body/route")
+puts routes.count
+#puts data
