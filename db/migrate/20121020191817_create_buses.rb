@@ -4,6 +4,7 @@ class CreateBuses < ActiveRecord::Migration
       t.string :lat
       t.string :long
       t.integer :riders
+      t.references :line
 
       t.timestamps
     end
