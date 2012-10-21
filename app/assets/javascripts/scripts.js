@@ -1,11 +1,30 @@
-function insertRoutes(element) {
+var transitMap = {
+  mapOptions: {
+    zoom: 14,
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  },
+  map: null,
+  user_pos: null,
+  retailers: [],
+  markers: [],
+  iw: new google.maps.InfoWindow()
+};
+
+function insertRoutes(el) {
+  var line_names = ["2","8x","KT","J"];
   var example_array= ['#890b0b', '#17890b', '#0b4f89', '#ffae00'];
 
   $.each(example_array, function(index, value) {
-    var fucking_number = index+1;
-    var fucking_element = $('<li><p>'+ fucking_number +'</p></li>');
-    fucking_element.css('background-color', value);
-    element.append(fucking_element) ;
+    var number = line_names[index];
+    var element = $('<li><p>'+ number +'</p></li>');
+    element.css('background-color', value);
+    element.css('cursor','pointer');
+    element.addClass("line_button");
+    element.click(function(e){
+      console.log('showing line ' + (index+1));
+      transitMap.showLine(index+1);
+    });
+    el.append(element);
   });
 }
 
@@ -44,7 +63,6 @@ function initializeUI() {
                 $(this).removeClass('close_arrow');
                 $(this).addClass('open_arrow');
                 $('#riderStream_logo').animate({'right': '-13%'});
-
               });
               $('.open_arrow').live('click',function() {
                 $(this).removeClass('open_arrow');
@@ -55,24 +73,11 @@ function initializeUI() {
           })
         }
       })
-}
-})
-
+    }
+  })
 }
 
 $(document).ready(function () {
-  var transitMap = {
-    mapOptions: {
-      zoom: 14,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
-    },
-    map: null,
-    user_pos: null,
-    retailers: [],
-    markers: [],
-    iw: new google.maps.InfoWindow()
-  };
-
   transitMap.initialize = function() {
     $('#map').height($('.content.container-fluid').height());
 
@@ -104,24 +109,6 @@ $(document).ready(function () {
     google.maps.event.addListenerOnce(transitMap.map, 'tilesloaded', function(){
       initializeUI();
     });
-
-    $.getJSON('api/lines/1', function(data) {
-      transitMap.drawRoute(data.route);
-    });
-
-
-    window.setInterval(function(){
-      $.getJSON('api/lines/1/stops', function(data) {
-        transitMap.drawStops(data);
-      });
-    }, 10000);
-
-    window.setInterval(function(){
-      console.log('updating...');
-      $.getJSON('api/lines/1/buses', function(data) {
-        transitMap.drawBuses(data);
-      });
-    }, 10000);
   };
 
   transitMap.handleNoGeolocation = function(errorFlag) {
@@ -159,8 +146,6 @@ $(document).ready(function () {
   }
 
   google.maps.event.addDomListener(window, 'load', transitMap.initialize);
-
-
 
   // CCHAO
   transitMap.drawRoute = function(route){
@@ -209,6 +194,25 @@ $(document).ready(function () {
         icon: image
       });
     });
+  };
+
+  transitMap.showLine = function(lineid){
+    $.getJSON('api/lines/'+lineid, function(data) {
+      transitMap.drawRoute(data.route);
+    });
+
+    window.setInterval(function(){
+      $.getJSON('api/lines/'+lineid+'/stops', function(data) {
+        transitMap.drawStops(data);
+      });
+    }, 10000);
+
+    window.setInterval(function(){
+      console.log('updating...');
+      $.getJSON('api/lines/'+lineid+'/buses', function(data) {
+        transitMap.drawBuses(data);
+      });
+    }, 10000);
   };
 
 });
