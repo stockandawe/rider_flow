@@ -1,7 +1,7 @@
 function insertRoutes(element) {
   var example_array= ['#890b0b', '#17890b', '#0b4f89', '#ffae00'];
 
-  $.each(example_array, function(index, value) { 
+  $.each(example_array, function(index, value) {
     var fucking_number = index+1;
     var fucking_element = $('<li><p>'+ fucking_number +'</p></li>');
     fucking_element.css('background-color', value);
@@ -35,11 +35,11 @@ function initializeUI() {
         complete: function() {
           $(this).append(rightpanel);
           insertRoutes($('#listofroutes'));
-          rightpanel.animate({ 
+          rightpanel.animate({
             'opacity': '1'
           },{
             duration: 200,
-            complete: function() {                              
+            complete: function() {
               $('.close_arrow').live('click',function() {
                 $(this).removeClass('close_arrow');
                 $(this).addClass('open_arrow');
@@ -105,8 +105,20 @@ $(document).ready(function () {
       initializeUI();
     });
 
-
-    drawing();
+    $.getJSON('api/lines/1', function(data) {
+      transitMap.drawRoute(data.route);
+    });
+    $.getJSON('api/lines/1/stops', function(data) {
+      transitMap.drawStops(data);
+    });
+    $.ajax({
+      url: 'api/lines/1/buses',
+      type: 'GET',
+      dataType: 'json',
+      success: function(data, textStatus, xhr) {
+        transitMap.drawBuses(data);
+      }
+    });
   };
 
   transitMap.handleNoGeolocation = function(errorFlag) {
@@ -144,35 +156,44 @@ $(document).ready(function () {
   }
 
   google.maps.event.addDomListener(window, 'load', transitMap.initialize);
-  
-
-  // do something only the first time the map is loaded
 
 
 
   // CCHAO
+  transitMap.drawRoute = function(route){
+    var routemap = new google.maps.Polyline({ path: [], strokeColor: '#FF0000' });
 
+    var routes = $.parseJSON(route);
+    var arr = [];
 
-  test = new google.maps.Polyline({
-    path: [], strokeColor: '#FF0000'
-  });
-
-  function drawing(){
-    
-    $.getJSON('api/lines/1', function(data) {
-      var routes = $.parseJSON(data.route);
-
-      var arr = [];
-
-      $.each(routes, function(i, item) {
-        arr.push(new google.maps.LatLng(routes[i][0], routes[i][1]));
-      });
-
-      test.setPath(arr);
-      test.setOptions({ map: transitMap.map });
+    $.each(routes, function(i, item) {
+      arr.push(new google.maps.LatLng(routes[i][0], routes[i][1]));
     });
-  }
 
+    routemap.setPath(arr);
+    routemap.setOptions({ map: transitMap.map });
+  };
 
+  transitMap.drawStops = function(stops){
+    $.each(stops, function(i, item){
+      var image = 'stop_green.png';
+      var Marker = new google.maps.Marker({
+        position: new google.maps.LatLng(stops[i].lat,stops[i].long),
+        map: transitMap.map
+        ,icon: image
+      });
+    });
+  };
+
+  transitMap.drawBuses = function(buses){
+    $.each(buses, function(i, item){
+      var image = 'bus_green.png';
+      var Marker = new google.maps.Marker({
+        position: new google.maps.LatLng(buses[i].lat,buses[i].long),
+        map: transitMap.map
+        ,icon: image
+      });
+    });
+  };
 
 });
