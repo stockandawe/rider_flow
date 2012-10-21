@@ -1,15 +1,18 @@
 function insertRoutes(element) {
-  var example_array= [1, 2, 3, 4, 5];
-  $.each(example_array, function(index, value) { 
-    element.append($('<li></li>')) ;
+  var example_array= ['#890b0b', '#17890b', '#0b4f89', '#ffae00'];
+
+  $.each(example_array, function(index, value) {
+    var fucking_number = index+1;
+    var fucking_element = $('<li><p>'+ fucking_number +'</p></li>');
+    fucking_element.css('background-color', value);
+    element.append(fucking_element) ;
   });
 }
 
 function initializeUI() {
   var rightpanel = $('<div id="riderStream_rightpanel"></div>');
   var rightpanel_collapsearrow = $('<div id="rightpanel_collapsearrow" class="close_arrow"></div>');
-  var riderStream_rightpanel_therealdealbrotha = $('<div id="riderStream_rightpanel_therealdealbrotha"><h4>Choose your route:</h4><div id="listofroutes"></div></div>');
-  insertRoutes($('#listofroutes'));
+  var riderStream_rightpanel_therealdealbrotha = $('<div id="riderStream_rightpanel_therealdealbrotha"><h4>Choose your route:</h4><ul id="listofroutes"></ul></div>');
   rightpanel.append(rightpanel_collapsearrow);
   rightpanel.append(riderStream_rightpanel_therealdealbrotha);
   $('#riderStream_logo').animate({
@@ -28,26 +31,24 @@ function initializeUI() {
         easing: 'easeInOutBack',
         duration: 750,
         start: function() {
-          //$(this).css('background-image', 'none');
         },
         complete: function() {
           $(this).append(rightpanel);
-          rightpanel.animate({ 
+          insertRoutes($('#listofroutes'));
+          rightpanel.animate({
             'opacity': '1'
           },{
             duration: 200,
-            complete: function() {                              
+            complete: function() {
               $('.close_arrow').live('click',function() {
                 $(this).removeClass('close_arrow');
                 $(this).addClass('open_arrow');
-                $('#riderStream_logo').removeClass('showlogo');
                 $('#riderStream_logo').animate({'right': '-13%'});
 
               });
               $('.open_arrow').live('click',function() {
                 $(this).removeClass('open_arrow');
                 $(this).addClass('close_arrow');
-                $('#riderStream_logo').addClass('showlogo');
                 $('#riderStream_logo').animate({'right': '0%'});
               });
             }
@@ -104,8 +105,23 @@ $(document).ready(function () {
       initializeUI();
     });
 
+    $.getJSON('api/lines/1', function(data) {
+      transitMap.drawRoute(data.route);
+    });
 
-    drawing();
+
+    //window.setInterval(function(){
+      $.getJSON('api/lines/1/stops', function(data) {
+        transitMap.drawStops(data);
+      });
+    //}, 1000);
+
+    //window.setInterval(function(){
+      console.log('updating...');
+      $.getJSON('api/lines/1/buses', function(data) {
+        transitMap.drawBuses(data);
+      });
+    //}, 1000);
   };
 
   transitMap.handleNoGeolocation = function(errorFlag) {
@@ -143,35 +159,56 @@ $(document).ready(function () {
   }
 
   google.maps.event.addDomListener(window, 'load', transitMap.initialize);
-  
-
-  // do something only the first time the map is loaded
 
 
 
   // CCHAO
+  transitMap.drawRoute = function(route){
+    var routemap = new google.maps.Polyline({ path: [], strokeColor: '#FF0000' });
 
+    var routes = $.parseJSON(route);
+    var arr = [];
 
-  test = new google.maps.Polyline({
-    path: [], strokeColor: '#FF0000'
-  });
-
-  function drawing(){
-    
-    $.getJSON('api/lines/1', function(data) {
-      var routes = $.parseJSON(data.route);
-
-      var arr = [];
-
-      $.each(routes, function(i, item) {
-        arr.push(new google.maps.LatLng(routes[i][0], routes[i][1]));
-      });
-
-      test.setPath(arr);
-      test.setOptions({ map: transitMap.map });
+    $.each(routes, function(i, item) {
+      arr.push(new google.maps.LatLng(routes[i][0], routes[i][1]));
     });
-  }
 
+    routemap.setPath(arr);
+    routemap.setOptions({ map: transitMap.map });
+  };
 
+  transitMap.drawStops = function(stops){
+    $.each(stops, function(i, item){
+      var image = 'stop_yellow.png';
+
+      if(stops[i].riders < 20)
+        image = 'stop_green.png';
+      else if(stops[i].riders > 40)
+        image = 'stop_red.png';
+
+      var Marker = new google.maps.Marker({
+        position: new google.maps.LatLng(stops[i].lat,stops[i].long),
+        map: transitMap.map,
+        icon: image
+      });
+    });
+  };
+
+  transitMap.drawBuses = function(buses){
+    $.each(buses, function(i, item){
+      var image = 'bus_yellow.png';
+
+      if(buses[i].riders < 20)
+        image = 'bus_green.png';
+      else if(buses[i].riders > 40)
+        image = 'bus_red.png';
+
+      var Marker = new google.maps.Marker({
+        position: new google.maps.LatLng(buses[i].lat,buses[i].long),
+        map: transitMap.map,
+        icon: image
+      });
+    });
+  };
 
 });

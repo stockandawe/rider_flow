@@ -1,7 +1,11 @@
-#map { 
+#map {
 	width: 100%;
 	height: 100%;
-	background-color: gray;	
+	background-color: gray;
+}
+
+#map img {
+    max-width: none;
 }
 
 #riderStream_logo {
@@ -28,39 +32,51 @@
 
 #riderStream_rightpanel_therealdealbrotha{
 	position: absolute;
-	height: 85%;
+	height: 90%;
 	width: 100%;
 	bottom: 0;
 	padding: 12px;
 	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
 	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
-	box-sizing: border-box; 
+	box-sizing: border-box;
 }
 
-#riderStream_rightpanel_therealdealbrotha h4{ 
+#riderStream_rightpanel_therealdealbrotha h4{
 	color: white;
 	font-family: 'RobotoRegular', serif;
 	letter-spacing: -1px;
 }
 
 #listofroutes {
-	height: 20%;
+	height: 100%;
 	width: auto;
 	overflow-y: scroll;
 	overflow-x: hidden;
-	background-color: red;
+	margin: 0;
 }
 
 #listofroutes li {
-	width: 100%;
-	height: 40px;
+	width: 90px;
+	height: 90px;
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	display: inline;
+	float: left;
 	background-color: green;
 	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
 	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
-	box-sizing: border-box; 
-	border-bottom: 2px solid white;
-	display: block;	
+	box-sizing: border-box;
+	border: 2px solid white;
+	margin: 0 6px 6px 0;
 }
+#listofroutes li p {
+	text-align: center;
+	margin-top: 37%;
+	font-size: 36px;
+	color: white;
+	font-weight: bold;
+}
+
 
 #rightpanel_collapsearrow {
 	width: 100%;
@@ -279,22 +295,21 @@
 ::-webkit-scrollbar {
     width: 12px;
 }
- 
+
 /* Track */
 ::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
     -webkit-border-radius: 10px;
     border-radius: 10px;
 }
- 
+
 /* Handle */
 ::-webkit-scrollbar-thumb {
     -webkit-border-radius: 10px;
     border-radius: 10px;
-    background: rgba(255,0,0,0.8); 
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+    background: rgba(255,0,0,0.8);
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
 }
 ::-webkit-scrollbar-thumb:window-inactive {
-	background: rgba(255,0,0,0.4); 
+	background: rgba(255,0,0,0.4);
 }
-
