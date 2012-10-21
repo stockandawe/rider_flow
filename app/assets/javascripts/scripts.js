@@ -35,6 +35,7 @@ function initializeUI() {
   var rightpanel = $('<div id="riderStream_rightpanel"></div>');
   var rightpanel_collapsearrow = $('<div id="rightpanel_collapsearrow" class="close_arrow"></div>');
   var riderStream_rightpanel_therealdealbrotha = $('<div id="riderStream_rightpanel_therealdealbrotha"><h4>Choose your route:</h4><ul id="listofroutes"></ul></div>');
+  $('#riderStream_logo').css('background-position', '-12px 22px');
   rightpanel.append(rightpanel_collapsearrow);
   rightpanel.append(riderStream_rightpanel_therealdealbrotha);
   $('#riderStream_logo').animate({
@@ -64,6 +65,7 @@ function initializeUI() {
             complete: function() {
               $('.close_arrow').live('click',function() {
                 $(this).removeClass('close_arrow');
+                $('#riderStream_logo').css('background-position', '-12px 22px');
                 $(this).addClass('open_arrow');
                 $('#riderStream_logo').animate({'right': '-13%'});
               });
@@ -78,9 +80,16 @@ function initializeUI() {
       })
     }
   })
+$('#listofroutes .line_button').live('click',function(){
+  $('#listofroutes .line_button').removeClass('active');
+  $(this).addClass('active');
+
+});
 }
 
 $(document).ready(function () {
+ 
+
   transitMap.initialize = function() {
     $('#map').height($('.content.container-fluid').height());
 
@@ -254,4 +263,6 @@ $(document).ready(function () {
       }
     }, 10000);
   };
+
+  
 });
