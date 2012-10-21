@@ -111,9 +111,13 @@ $(document).ready(function () {
     $.getJSON('api/lines/1/stops', function(data) {
       transitMap.drawStops(data);
     });
-    $.getJSON('api/lines/1/buses', function(data) {
-      //console.log(data);
-      transitMap.drawBuses(data);
+    $.ajax({
+      url: 'api/lines/1/buses',
+      type: 'GET',
+      dataType: 'json',
+      success: function(data, textStatus, xhr) {
+        transitMap.drawBuses(data);
+      }
     });
   };
 
@@ -172,22 +176,22 @@ $(document).ready(function () {
 
   transitMap.drawStops = function(stops){
     $.each(stops, function(i, item){
-      //var image = 'http://code.google.com/apis/maps/documentation/javascript/examples/images/beachflag.png';
+      var image = 'stop_green.png';
       var Marker = new google.maps.Marker({
         position: new google.maps.LatLng(stops[i].lat,stops[i].long),
         map: transitMap.map
-        //,icon: image
+        ,icon: image
       });
     });
   };
 
   transitMap.drawBuses = function(buses){
     $.each(buses, function(i, item){
-      //var image = 'http://code.google.com/apis/maps/documentation/javascript/examples/images/beachflag.png';
+      var image = 'bus_green.png';
       var Marker = new google.maps.Marker({
         position: new google.maps.LatLng(buses[i].lat,buses[i].long),
         map: transitMap.map
-        //,icon: image
+        ,icon: image
       });
     });
   };
