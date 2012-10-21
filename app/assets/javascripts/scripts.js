@@ -110,18 +110,18 @@ $(document).ready(function () {
     });
 
 
-    //window.setInterval(function(){
+    window.setInterval(function(){
       $.getJSON('api/lines/1/stops', function(data) {
         transitMap.drawStops(data);
       });
-    //}, 1000);
+    }, 10000);
 
-    //window.setInterval(function(){
+    window.setInterval(function(){
       console.log('updating...');
       $.getJSON('api/lines/1/buses', function(data) {
         transitMap.drawBuses(data);
       });
-    //}, 1000);
+    }, 10000);
   };
 
   transitMap.handleNoGeolocation = function(errorFlag) {
