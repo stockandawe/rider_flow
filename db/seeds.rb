@@ -11,7 +11,9 @@ require 'open-uri'
 require 'csv'
 
 route_tag = "2"
-line = Line.first_or_create(:name => "2-Clement")
+route_shape_id = "92376"
+
+line = Line.first_or_create()
 
 # I am hosting interesting.html on a local server.  This is the URL.
 url_for_route_tag = "http://webservices.nextbus.com/service/publicXMLFeed?command=routeConfig&a=sf-muni&r="+route_tag
@@ -20,6 +22,12 @@ url_for_route_tag = "http://webservices.nextbus.com/service/publicXMLFeed?comman
 # the process
 data = Nokogiri::XML(open(url_for_route_tag))
 root = data.root
+route = root.xpath('//route')
+
+# Read the title for this route
+line.name = "#{route.attr('title')}"
+line.save!
+
 stops = root.xpath('//route/stop')
 
 stops.each do |stop|
@@ -52,25 +60,12 @@ buses.each do |bus|
   bus.save!
 end
 
-ActiveRecord::Base.transaction do
-  CSV.foreach("#{Rails.root}/db/seed_data/shapes.csv") do |shapes|
-    shape_id, lon, lat, seq, dist_travelled = shapes
-    # number, story_title, story_description, story_url, dont_use, story_date, story_org, story_fund, story_photo = orgs
-# 
-    # organization = Organization.find_by_name(story_org)
-#    
-    # if organization.present?
-      # Story.where(title: story_title).first_or_create!(
-        # content: story_description,
-        # organization: organization,
-        # slug: story_title.match(/(^[A-z0-9\s]*)/).to_s.downcase.gsub(/\s/,'_'),
-        # photo_filename: story_photo,
-        # published_at: story_date
-      # )
-    # else
-      # message = "[Story Import] Could not find organization with name `#{story_org}'"
-      # Rails.logger.warn message
-      # puts message
-    # end
+route = []
+CSV.foreach("#{Rails.root}/db/seed_data/shapes.csv") do |shapes|
+  shape_id, lon, lat, seq, dist_travelled = shapes
+  if (route_shape_id == shape_id)
+    route.append([lat, lon])
   end
 end
+line.route = route.to_s
+line.save!
