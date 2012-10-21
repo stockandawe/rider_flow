@@ -34,7 +34,7 @@
 	position: absolute;
 	height: 90%;
 	width: 100%;
-	bottom: 0;
+	top: 100px;
 	padding: 12px;
 	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
 	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
@@ -50,7 +50,7 @@
 #listofroutes {
 	height: 100%;
 	width: auto;
-	overflow-y: scroll;
+	overflow-y: hidden;
 	overflow-x: hidden;
 	margin: 0;
 }
@@ -59,7 +59,7 @@
 	width: 90px;
 	height: 90px;
 	-webkit-border-radius: 50%;
-	-moz-border-radius: 50%;
+	border-radius: 50%;
 	display: inline;
 	float: left;
 	background-color: green;
@@ -68,7 +68,15 @@
 	box-sizing: border-box;
 	border: 2px solid white;
 	margin: 0 6px 6px 0;
+    transform: scale(.8,.8);
+    opacity: .7;
 }
+
+#listofroutes li.active {
+    transform: scale(1,1);
+    opacity: 1;
+}
+
 #listofroutes li p {
 	text-align: center;
 	margin-top: 37%;
