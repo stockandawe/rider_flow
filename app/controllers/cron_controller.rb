@@ -24,13 +24,34 @@ class CronController < ApplicationController
       data = Nokogiri::XML(open(url_for_buses_route_tag))
       root = data.root
       buses = root.xpath('//vehicle')
-  
+
       buses.each do |bus|
         bus_id = bus.attr('id')
         b = Bus.find_by_bus_id(bus_id)
-        b.update_attribute(:lat, bus.attr('lat'))
-        b.update_attribute(:long, bus.attr('lon'))
+        if b != nil
+          b.update_attribute(:lat, bus.attr('lat'))
+          b.update_attribute(:long, bus.attr('lon'))
+        end
       end
     end
   end
+
+  def clear
+    Stop.all.each do |s|
+      s.update_attribute(:riders, 0)
+    end
+    Bus.all.each do |b|
+      b.update_attribute(:riders, 0)
+    end
+  end
+
+  def improve
+    Stop.all.each do |s|
+      s.update_attribute(:riders, rand(40))
+    end
+    Bus.all.each do |b|
+      b.update_attribute(:riders, rand(40))
+    end
+  end
+
 end
