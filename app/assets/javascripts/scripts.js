@@ -62,7 +62,7 @@ function initializeUI() {
 $(document).ready(function () {
   var transitMap = {
     mapOptions: {
-      zoom: 15,
+      zoom: 14,
       mapTypeId: google.maps.MapTypeId.ROADMAP
     },
     map: null,
@@ -103,6 +103,9 @@ $(document).ready(function () {
     google.maps.event.addListenerOnce(transitMap.map, 'tilesloaded', function(){
       initializeUI();
     });
+
+
+    drawing();
   };
 
   transitMap.handleNoGeolocation = function(errorFlag) {
@@ -144,7 +147,31 @@ $(document).ready(function () {
 
   // do something only the first time the map is loaded
 
-  
+
+
+  // CCHAO
+
+
+  test = new google.maps.Polyline({
+    path: [], strokeColor: '#FF0000'
+  });
+
+  function drawing(){
+    
+    $.getJSON('api/lines/1', function(data) {
+      var routes = $.parseJSON(data.route);
+
+      var arr = [];
+
+      $.each(routes, function(i, item) {
+        arr.push(new google.maps.LatLng(routes[i][0], routes[i][1]));
+      });
+
+      test.setPath(arr);
+      test.setOptions({ map: transitMap.map });
+    });
+  }
+
+
 
 });
-
