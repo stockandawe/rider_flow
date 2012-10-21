@@ -68,12 +68,16 @@
 	box-sizing: border-box;
 	border: 2px solid white;
 	margin: 0 6px 6px 0;
-    transform: scale(.8,.8);
+    -webkit-transform: scale(.8,.8);
+    -moz-transform: scale(.8,.8);
+    -o-transform: scale(.8,.8);
     opacity: .7;
 }
 
 #listofroutes li.active {
-    transform: scale(1,1);
+    -webkit-transform: scale(1,1);
+    -moz-transform: scale(1,1);
+    -o-transform: scale(1,1);
     opacity: 1;
 }
 
