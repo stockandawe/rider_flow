@@ -108,17 +108,20 @@ $(document).ready(function () {
     $.getJSON('api/lines/1', function(data) {
       transitMap.drawRoute(data.route);
     });
-    $.getJSON('api/lines/1/stops', function(data) {
-      transitMap.drawStops(data);
-    });
-    $.ajax({
-      url: 'api/lines/1/buses',
-      type: 'GET',
-      dataType: 'json',
-      success: function(data, textStatus, xhr) {
+
+
+    //window.setInterval(function(){
+      $.getJSON('api/lines/1/stops', function(data) {
+        transitMap.drawStops(data);
+      });
+    //}, 1000);
+
+    //window.setInterval(function(){
+      console.log('updating...');
+      $.getJSON('api/lines/1/buses', function(data) {
         transitMap.drawBuses(data);
-      }
-    });
+      });
+    //}, 1000);
   };
 
   transitMap.handleNoGeolocation = function(errorFlag) {
@@ -176,22 +179,34 @@ $(document).ready(function () {
 
   transitMap.drawStops = function(stops){
     $.each(stops, function(i, item){
-      var image = 'stop_green.png';
+      var image = 'stop_yellow.png';
+
+      if(stops[i].riders < 20)
+        image = 'stop_green.png';
+      else if(stops[i].riders > 40)
+        image = 'stop_red.png';
+
       var Marker = new google.maps.Marker({
         position: new google.maps.LatLng(stops[i].lat,stops[i].long),
-        map: transitMap.map
-        ,icon: image
+        map: transitMap.map,
+        icon: image
       });
     });
   };
 
   transitMap.drawBuses = function(buses){
     $.each(buses, function(i, item){
-      var image = 'bus_green.png';
+      var image = 'bus_yellow.png';
+
+      if(buses[i].riders < 20)
+        image = 'bus_green.png';
+      else if(buses[i].riders > 40)
+        image = 'bus_red.png';
+
       var Marker = new google.maps.Marker({
         position: new google.maps.LatLng(buses[i].lat,buses[i].long),
-        map: transitMap.map
-        ,icon: image
+        map: transitMap.map,
+        icon: image
       });
     });
   };
