@@ -1,15 +1,18 @@
 function insertRoutes(element) {
-  var example_array= [1, 2, 3, 4, 5];
+  var example_array= ['#890b0b', '#17890b', '#0b4f89', '#ffae00'];
+
   $.each(example_array, function(index, value) { 
-    element.append($('<li></li>')) ;
+    var fucking_number = index+1;
+    var fucking_element = $('<li><p>'+ fucking_number +'</p></li>');
+    fucking_element.css('background-color', value);
+    element.append(fucking_element) ;
   });
 }
 
 function initializeUI() {
   var rightpanel = $('<div id="riderStream_rightpanel"></div>');
   var rightpanel_collapsearrow = $('<div id="rightpanel_collapsearrow" class="close_arrow"></div>');
-  var riderStream_rightpanel_therealdealbrotha = $('<div id="riderStream_rightpanel_therealdealbrotha"><h4>Choose your route:</h4><div id="listofroutes"></div></div>');
-  insertRoutes($('#listofroutes'));
+  var riderStream_rightpanel_therealdealbrotha = $('<div id="riderStream_rightpanel_therealdealbrotha"><h4>Choose your route:</h4><ul id="listofroutes"></ul></div>');
   rightpanel.append(rightpanel_collapsearrow);
   rightpanel.append(riderStream_rightpanel_therealdealbrotha);
   $('#riderStream_logo').animate({
@@ -28,10 +31,10 @@ function initializeUI() {
         easing: 'easeInOutBack',
         duration: 750,
         start: function() {
-          //$(this).css('background-image', 'none');
         },
         complete: function() {
           $(this).append(rightpanel);
+          insertRoutes($('#listofroutes'));
           rightpanel.animate({ 
             'opacity': '1'
           },{
@@ -40,14 +43,12 @@ function initializeUI() {
               $('.close_arrow').live('click',function() {
                 $(this).removeClass('close_arrow');
                 $(this).addClass('open_arrow');
-                $('#riderStream_logo').removeClass('showlogo');
                 $('#riderStream_logo').animate({'right': '-13%'});
 
               });
               $('.open_arrow').live('click',function() {
                 $(this).removeClass('open_arrow');
                 $(this).addClass('close_arrow');
-                $('#riderStream_logo').addClass('showlogo');
                 $('#riderStream_logo').animate({'right': '0%'});
               });
             }
