@@ -5,9 +5,12 @@ var transitMap = {
   },
   map: null,
   user_pos: null,
-  retailers: [],
-  markers: [],
-  iw: new google.maps.InfoWindow()
+  bus_markers: [],
+  stop_markers: [],
+  iw: new google.maps.InfoWindow(),
+  activeIntervals: [],
+  currentRoute: null,
+  activeLine: null
 };
 
 function insertRoutes(el) {
@@ -109,6 +112,8 @@ $(document).ready(function () {
     google.maps.event.addListenerOnce(transitMap.map, 'tilesloaded', function(){
       initializeUI();
     });
+
+    transitMap.setIntervals();
   };
 
   transitMap.handleNoGeolocation = function(errorFlag) {
@@ -147,9 +152,18 @@ $(document).ready(function () {
 
   google.maps.event.addDomListener(window, 'load', transitMap.initialize);
 
+  transitMap.clearOverlays = function(array){
+    for (var i = 0; i < array.length; i++)
+      array[i].setMap(null);
+    array = [];
+  }
+
   // CCHAO
   transitMap.drawRoute = function(route){
-    var routemap = new google.maps.Polyline({ path: [], strokeColor: '#FF0000' });
+    if(transitMap.currentRoute)
+      transitMap.currentRoute.setMap(null);
+    else
+      transitMap.currentRoute = new google.maps.Polyline({ path: [], strokeColor: '#FF0000' });
 
     var routes = $.parseJSON(route);
     var arr = [];
@@ -158,11 +172,14 @@ $(document).ready(function () {
       arr.push(new google.maps.LatLng(routes[i][0], routes[i][1]));
     });
 
-    routemap.setPath(arr);
-    routemap.setOptions({ map: transitMap.map });
+    transitMap.currentRoute.setPath(arr);
+    transitMap.currentRoute.setOptions({ map: transitMap.map });
   };
 
   transitMap.drawStops = function(stops){
+    // Cleaning previous data
+    transitMap.clearOverlays(transitMap.stop_markers);
+
     $.each(stops, function(i, item){
       var image = 'stop_yellow.png';
 
@@ -171,15 +188,20 @@ $(document).ready(function () {
       else if(stops[i].riders > 40)
         image = 'stop_red.png';
 
-      var Marker = new google.maps.Marker({
-        position: new google.maps.LatLng(stops[i].lat,stops[i].long),
-        map: transitMap.map,
-        icon: image
-      });
+      transitMap.stop_markers.push(
+        new google.maps.Marker({
+          position: new google.maps.LatLng(stops[i].lat,stops[i].long),
+          map: transitMap.map,
+          icon: image
+        })
+      );
     });
   };
 
   transitMap.drawBuses = function(buses){
+    // Cleaning previous data
+    transitMap.clearOverlays(transitMap.bus_markers);
+
     $.each(buses, function(i, item){
       var image = 'bus_yellow.png';
 
@@ -188,31 +210,48 @@ $(document).ready(function () {
       else if(buses[i].riders > 40)
         image = 'bus_red.png';
 
-      var Marker = new google.maps.Marker({
-        position: new google.maps.LatLng(buses[i].lat,buses[i].long),
-        map: transitMap.map,
-        icon: image
-      });
+      transitMap.bus_markers.push(
+        new google.maps.Marker({
+          position: new google.maps.LatLng(buses[i].lat,buses[i].long),
+          map: transitMap.map,
+          icon: image
+        })
+      );
     });
   };
 
   transitMap.showLine = function(lineid){
-    $.getJSON('api/lines/'+lineid, function(data) {
+    transitMap.activeLine = lineid;
+    // Loading data
+    $.getJSON('api/lines/'+transitMap.activeLine, function(data) {
       transitMap.drawRoute(data.route);
     });
-
-    window.setInterval(function(){
-      $.getJSON('api/lines/'+lineid+'/stops', function(data) {
-        transitMap.drawStops(data);
-      });
-    }, 10000);
-
-    window.setInterval(function(){
-      console.log('updating...');
-      $.getJSON('api/lines/'+lineid+'/buses', function(data) {
-        transitMap.drawBuses(data);
-      });
-    }, 10000);
+    $.getJSON('api/lines/'+transitMap.activeLine+'/stops', function(data) {
+      transitMap.drawStops(data);
+    });
+    $.getJSON('api/lines/'+transitMap.activeLine+'/buses', function(data) {
+      transitMap.drawBuses(data);
+    });
   };
 
+  transitMap.setIntervals = function(){
+    // Setting intervals
+    window.setInterval(function(){
+      if(transitMap.activeLine){
+        console.log('updating stops...');
+        $.getJSON('api/lines/'+transitMap.activeLine+'/stops', function(data) {
+          transitMap.drawStops(data);
+        });
+      }
+    }, 10000);
+
+    window.setInterval(function(){
+      if(transitMap.activeLine){
+        console.log('updating buses...');
+        $.getJSON('api/lines/'+transitMap.activeLine+'/buses', function(data) {
+          transitMap.drawBuses(data);
+        });
+      }
+    }, 10000);
+  };
 });
