@@ -13,13 +13,15 @@ var transitMap = {
   activeLine: null
 };
 
+var example_array= ['#890b0b', '#17890b', '#0b4f89', '#ffae00'];
+var color;
 function insertRoutes(el) {
   var line_names = ["2","8x","KT","J"];
-  var example_array= ['#890b0b', '#17890b', '#0b4f89', '#ffae00'];
+  
 
   $.each(example_array, function(index, value) {
     var number = line_names[index];
-    var element = $('<li><p>'+ number +'</p></li>');
+    var element = $('<li id='+ index +'><p>'+ number +'</p></li>');
     element.css('background-color', value);
     element.css('cursor','pointer');
     element.addClass("line_button");
@@ -83,7 +85,7 @@ function initializeUI() {
 $('#listofroutes .line_button').live('click',function(){
   $('#listofroutes .line_button').removeClass('active');
   $(this).addClass('active');
-
+  color = $(this).attr('id');
 });
 }
 
@@ -182,7 +184,9 @@ $(document).ready(function () {
     });
 
     transitMap.currentRoute.setPath(arr);
+    transitMap.currentRoute.strokeColor = example_array[color];
     transitMap.currentRoute.setOptions({ map: transitMap.map });
+
   };
 
   transitMap.drawStops = function(stops){
