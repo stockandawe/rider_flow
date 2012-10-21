@@ -32,7 +32,7 @@
 
 #riderStream_rightpanel_therealdealbrotha{
 	position: absolute;
-	height: 85%;
+	height: 90%;
 	width: 100%;
 	bottom: 0;
 	padding: 12px;
@@ -48,23 +48,35 @@
 }
 
 #listofroutes {
-	height: 20%;
+	height: 100%;
 	width: auto;
 	overflow-y: scroll;
 	overflow-x: hidden;
-	background-color: red;
+	margin: 0;
 }
 
 #listofroutes li {
-	width: 100%;
-	height: 40px;
+	width: 90px;
+	height: 90px;
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	display: inline;
+	float: left;
 	background-color: green;
 	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
 	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
 	box-sizing: border-box;
-	border-bottom: 2px solid white;
-	display: block;
+	border: 2px solid white;
+	margin: 0 6px 6px 0;
 }
+#listofroutes li p {
+	text-align: center;
+	margin-top: 37%;
+	font-size: 36px;
+	color: white;
+	font-weight: bold;
+}
+
 
 #rightpanel_collapsearrow {
 	width: 100%;
@@ -301,4 +313,3 @@
 ::-webkit-scrollbar-thumb:window-inactive {
 	background: rgba(255,0,0,0.4);
 }
-
