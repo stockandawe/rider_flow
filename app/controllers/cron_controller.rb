@@ -18,17 +18,19 @@ class CronController < ApplicationController
     end
 
     # update the bus coordinates from the feed
-    route_tag = "2"
-    url_for_buses_route_tag = "http://webservices.nextbus.com/service/publicXMLFeed?command=vehicleLocations&a=sf-muni&r="+route_tag
-    data = Nokogiri::XML(open(url_for_buses_route_tag))
-    root = data.root
-    buses = root.xpath('//vehicle')
-
-    buses.each do |bus|
-      bus_id = bus.attr('id')
-      b = Bus.find_by_bus_id(bus_id)
-      b.update_attribute(:lat, bus.attr('lat'))
-      b.update_attribute(:long, bus.attr('lon'))
+    route_tags = ["2","8X","KT","J"]
+    route_tags.each do |route_tag|
+      url_for_buses_route_tag = "http://webservices.nextbus.com/service/publicXMLFeed?command=vehicleLocations&a=sf-muni&r="+route_tag
+      data = Nokogiri::XML(open(url_for_buses_route_tag))
+      root = data.root
+      buses = root.xpath('//vehicle')
+  
+      buses.each do |bus|
+        bus_id = bus.attr('id')
+        b = Bus.find_by_bus_id(bus_id)
+        b.update_attribute(:lat, bus.attr('lat'))
+        b.update_attribute(:long, bus.attr('lon'))
+      end
     end
   end
 end
